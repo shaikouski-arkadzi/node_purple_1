@@ -5,9 +5,10 @@
   "license": "ISC",
   "author": "",
   "type": "module",
-  "main": "index.js",
+  "main": "dist/src/main.js",
   "scripts": {
-    "start": "node dist/src/index.js",
+    "start": "node dist/src/main.js",
+    "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
