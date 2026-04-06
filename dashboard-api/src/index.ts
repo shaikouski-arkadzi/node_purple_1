@@ -1,4 +1,8 @@
-import express from "express";
+import express, {
+  type Request,
+  type Response,
+  type NextFunction,
+} from "express";
 
 const port = 8003;
 
@@ -17,7 +21,7 @@ app.get("/error", (req, res) => {
   throw new Error("Error!");
 });
 
-app.use((err, req, res, next) => {
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.log(err.message);
   res.status(500);
 });
