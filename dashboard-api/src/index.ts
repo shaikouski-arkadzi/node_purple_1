@@ -3,6 +3,7 @@ import express, {
   type Response,
   type NextFunction,
 } from "express";
+import { userRouter } from "./users/users.js";
 
 const port = 8003;
 
@@ -16,6 +17,8 @@ app.use((req, res, next) => {
 app.get("/hello", (req, res) => {
   res.send("Hi");
 });
+
+app.use("/users", userRouter);
 
 app.get("/error", (req, res) => {
   throw new Error("Error!");
