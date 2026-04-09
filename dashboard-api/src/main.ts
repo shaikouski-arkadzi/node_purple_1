@@ -1,8 +1,10 @@
 import { App } from "./app.js";
 import { LoggerService } from "./logger/logger.service.js";
+import { UserController } from "./users/users.controller.js";
 
 async function main() {
-  const app = new App(new LoggerService());
+  const logger = new LoggerService();
+  const app = new App(logger, new UserController(logger));
   await app.init();
 }
 
