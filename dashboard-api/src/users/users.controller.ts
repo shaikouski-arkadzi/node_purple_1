@@ -1,6 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 import { BaseController } from "../common/base.controller.js";
 import type { LoggerService } from "../logger/logger.service.js";
+import { HTTPError } from "../errors/http-error.class.js";
 
 export class UserController extends BaseController {
   constructor(logger: LoggerService) {
@@ -16,6 +17,11 @@ export class UserController extends BaseController {
         method: "post",
         func: this.login,
       },
+      {
+        path: "/error",
+        method: "post",
+        func: this.error,
+      },
     ]);
   }
 
@@ -25,5 +31,9 @@ export class UserController extends BaseController {
 
   register(req: Request, res: Response, next: NextFunction) {
     this.ok(res, "register");
+  }
+
+  error(req: Request, res: Response, next: NextFunction) {
+    next(new HTTPError(401, "Ошибка", "error"));
   }
 }
