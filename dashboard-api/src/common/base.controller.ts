@@ -1,6 +1,7 @@
 import { type Response, Router } from "express";
-import type { LoggerService } from "../logger/logger.service";
-import type { IRoute } from "./route.interface";
+import { injectable } from "inversify";
+import type { IRoute } from "./route.interface.ts";
+import type { ILogger } from "../logger/logger.interface.ts";
 
 /**
  * Базовый абстрактный контроллер для Express-приложения.
@@ -16,6 +17,7 @@ import type { IRoute } from "./route.interface";
  *
  * @abstract
  */
+@injectable()
 export abstract class BaseController {
   /**
    * Внутренний экземпляр Express Router.
@@ -32,7 +34,7 @@ export abstract class BaseController {
    *
    * @param logger Сервис логирования, используемый для регистрации маршрутов
    */
-  constructor(private logger: LoggerService) {
+  constructor(private logger: ILogger) {
     this._router = Router();
   }
 
