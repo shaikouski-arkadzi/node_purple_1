@@ -2,7 +2,6 @@ import express, { type Express } from "express";
 import { type Server } from "node:http";
 import { inject, injectable } from "inversify";
 import type { UserController } from "./users/users.controller.ts";
-import type { LoggerService } from "./logger/logger.service.ts";
 import { ExeptionFilter } from "./errors/exeption.filter.ts";
 import { TYPES } from "./types.ts";
 import type { ILogger } from "./logger/logger.interface.ts";
