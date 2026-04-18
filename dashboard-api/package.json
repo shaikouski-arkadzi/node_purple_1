@@ -8,6 +8,7 @@
   "main": "dist/src/main.js",
   "scripts": {
     "start": "node dist/src/main.js",
+    "dev": "nodemon",
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint .",
@@ -28,7 +29,9 @@
     "eslint": "^10.2.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.5",
+    "nodemon": "^3.1.14",
     "prettier": "^3.8.3",
+    "ts-node": "^10.9.2",
     "typescript-eslint": "^8.58.2"
   }
 }
