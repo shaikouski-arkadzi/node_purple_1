@@ -5,6 +5,8 @@ import { HTTPError } from "../errors/http-error.class.ts";
 import { TYPES } from "../types.ts";
 import type { ILogger } from "../logger/logger.interface.ts";
 import type { IUserController } from "./users.controller.interface.ts";
+import type { UserLoginDto } from "./dto/user-login.dto.ts";
+import type { UserRegisterDto } from "./dto/user-register.dto.ts";
 
 @injectable()
 export class UserController extends BaseController implements IUserController {
@@ -29,11 +31,17 @@ export class UserController extends BaseController implements IUserController {
     ]);
   }
 
-  login(req: Request, res: Response, next: NextFunction) {
+  login(req: Request<{}, {}, UserLoginDto>, res: Response, next: NextFunction) {
+    console.log(req.body);
     this.ok(res, "login");
   }
 
-  register(req: Request, res: Response, next: NextFunction) {
+  register(
+    req: Request<{}, {}, UserRegisterDto>,
+    res: Response,
+    next: NextFunction,
+  ) {
+    console.log(req.body);
     this.ok(res, "register");
   }
 
