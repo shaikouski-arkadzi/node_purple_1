@@ -7,6 +7,7 @@ import type { ILogger } from "../logger/logger.interface.ts";
 import type { IUserController } from "./users.controller.interface.ts";
 import type { UserLoginDto } from "./dto/user-login.dto.ts";
 import type { UserRegisterDto } from "./dto/user-register.dto.ts";
+import { User } from "./user.entity.ts";
 
 @injectable()
 export class UserController extends BaseController implements IUserController {
@@ -36,13 +37,17 @@ export class UserController extends BaseController implements IUserController {
     this.ok(res, "login");
   }
 
-  register(
+  async register(
     req: Request<{}, {}, UserRegisterDto>,
     res: Response,
     next: NextFunction,
   ) {
+    const { body } = req;
+    console.log(body);
+    const newUser = new User(body.email, body.name);
+    await newUser.setPassword(body.password);
     console.log(req.body);
-    this.ok(res, "register");
+    this.ok(res, newUser);
   }
 
   error(req: Request, res: Response, next: NextFunction) {
