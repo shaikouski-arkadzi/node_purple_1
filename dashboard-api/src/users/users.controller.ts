@@ -8,10 +8,14 @@ import type { IUserController } from "./users.controller.interface.ts";
 import type { UserLoginDto } from "./dto/user-login.dto.ts";
 import type { UserRegisterDto } from "./dto/user-register.dto.ts";
 import { User } from "./user.entity.ts";
+import type { IUserService } from "./users.service.interface.ts";
 
 @injectable()
 export class UserController extends BaseController implements IUserController {
-  constructor(@inject(TYPES.ILogger) private loggerService: ILogger) {
+  constructor(
+    @inject(TYPES.ILogger) private loggerService: ILogger,
+    @inject(TYPES.UserService) private userService: IUserService,
+  ) {
     super(loggerService);
     this.bindRoutes([
       {
@@ -44,10 +48,9 @@ export class UserController extends BaseController implements IUserController {
   ) {
     const { body } = req;
     console.log(body);
-    const newUser = new User(body.email, body.name);
-    await newUser.setPassword(body.password);
-    console.log(req.body);
-    this.ok(res, newUser);
+    const result = await this.userService.createUser(body);
+    if (!result) return next(new HTTPError(422, "User exists"));
+    this.ok(res, result);
   }
 
   error(req: Request, res: Response, next: NextFunction) {
