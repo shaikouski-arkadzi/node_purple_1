@@ -6,9 +6,10 @@ import { TYPES } from "../types.ts";
 import type { ILogger } from "../logger/logger.interface.ts";
 import type { IUserController } from "./users.controller.interface.ts";
 import type { UserLoginDto } from "./dto/user-login.dto.ts";
-import type { UserRegisterDto } from "./dto/user-register.dto.ts";
+import { UserRegisterDto } from "./dto/user-register.dto.ts";
 import { User } from "./user.entity.ts";
 import type { IUserService } from "./users.service.interface.ts";
+import { ValidateMiddleware } from "../common/validate.middleware.ts";
 
 @injectable()
 export class UserController extends BaseController implements IUserController {
@@ -22,6 +23,7 @@ export class UserController extends BaseController implements IUserController {
         path: "/register",
         method: "post",
         func: this.register,
+        middlewares: [new ValidateMiddleware(UserRegisterDto)],
       },
       {
         path: "/login",
