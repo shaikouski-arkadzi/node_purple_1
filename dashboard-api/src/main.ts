@@ -8,12 +8,15 @@ import type { IExeptionFilter } from "./errors/exeption.filter.interface.ts";
 import { TYPES } from "./types.ts";
 import type { IUserService } from "./users/users.service.interface.ts";
 import { UserService } from "./users/users.service.ts";
+import type { IConfigService } from "./config/config.service.interface.ts";
+import { ConfigService } from "./config/config.service.ts";
 
 export const appBinding = new ContainerModule(({ bind }) => {
   bind<ILogger>(TYPES.ILogger).to(LoggerService);
   bind<IExeptionFilter>(TYPES.ExeptionFilter).to(ExeptionFilter);
   bind<UserController>(TYPES.UserController).to(UserController);
   bind<IUserService>(TYPES.UserService).to(UserService);
+  bind<IConfigService>(TYPES.ConfigService).to(ConfigService);
   bind<App>(TYPES.Application).to(App);
 });
 
