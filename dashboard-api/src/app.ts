@@ -5,6 +5,7 @@ import type { UserController } from "./users/users.controller.ts";
 import { ExeptionFilter } from "./errors/exeption.filter.ts";
 import { TYPES } from "./types.ts";
 import type { ILogger } from "./logger/logger.interface.ts";
+import type { IConfigService } from "./config/config.service.interface.ts";
 
 @injectable()
 export class App {
@@ -16,6 +17,7 @@ export class App {
     @inject(TYPES.ILogger) private logger: ILogger,
     @inject(TYPES.UserController) private userController: UserController,
     @inject(TYPES.ExeptionFilter) private exeptionFilter: ExeptionFilter,
+    @inject(TYPES.ConfigService) private configService: IConfigService,
   ) {
     this.app = express();
     this.port = 8003;
