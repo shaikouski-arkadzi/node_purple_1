@@ -16,7 +16,9 @@ export const appBinding = new ContainerModule(({ bind }) => {
   bind<IExeptionFilter>(TYPES.ExeptionFilter).to(ExeptionFilter);
   bind<UserController>(TYPES.UserController).to(UserController);
   bind<IUserService>(TYPES.UserService).to(UserService);
-  bind<IConfigService>(TYPES.ConfigService).to(ConfigService);
+  bind<IConfigService>(TYPES.ConfigService)
+    .to(ConfigService)
+    .inSingletonScope();
   bind<App>(TYPES.Application).to(App);
 });
 
