@@ -12,7 +12,9 @@ import type { ILogger } from "../logger/logger.interface.ts";
 export class ConfigService implements IConfigService {
   private config: DotenvParseOutput;
   constructor(@inject(TYPES.ILogger) private logger: ILogger) {
-    const result: DotenvConfigOutput = config();
+    const result: DotenvConfigOutput = config({
+      path: ".env.local",
+    });
     if (result.error) {
       this.logger.error("[ConfigService] Не удалось прочитать .env");
     } else {
