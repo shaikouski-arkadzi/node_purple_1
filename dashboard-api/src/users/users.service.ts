@@ -18,7 +18,9 @@ export class UserService implements IUserService {
     password,
   }: UserRegisterDto): Promise<User | null> {
     const newUser = new User(email, name);
-    await newUser.setPassword(password);
+    const salt = this.configService.get<number>("SALT");
+    console.log(salt);
+    await newUser.setPassword(password, salt);
     return null;
   }
 
