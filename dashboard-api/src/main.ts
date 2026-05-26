@@ -11,6 +11,7 @@ import { UserService } from "./users/users.service.ts";
 import type { IConfigService } from "./config/config.service.interface.ts";
 import { ConfigService } from "./config/config.service.ts";
 import { PrismaService } from "./database/prisma.service.ts";
+import { UsersRepository } from "./users/users.repository.ts";
 
 export const appBinding = new ContainerModule(({ bind }) => {
   bind<ILogger>(TYPES.ILogger).to(LoggerService);
@@ -20,6 +21,9 @@ export const appBinding = new ContainerModule(({ bind }) => {
   bind<PrismaService>(TYPES.PrismaService).to(PrismaService).inSingletonScope();
   bind<IConfigService>(TYPES.ConfigService)
     .to(ConfigService)
+    .inSingletonScope();
+  bind<UsersRepository>(TYPES.UsersRepository)
+    .to(UsersRepository)
     .inSingletonScope();
   bind<App>(TYPES.Application).to(App);
 });
