@@ -5,9 +5,8 @@ import { HTTPError } from "../errors/http-error.class.ts";
 import { TYPES } from "../types.ts";
 import type { ILogger } from "../logger/logger.interface.ts";
 import type { IUserController } from "./users.controller.interface.ts";
-import type { UserLoginDto } from "./dto/user-login.dto.ts";
+import { UserLoginDto } from "./dto/user-login.dto.ts";
 import { UserRegisterDto } from "./dto/user-register.dto.ts";
-import { User } from "./user.entity.ts";
 import type { IUserService } from "./users.service.interface.ts";
 import { ValidateMiddleware } from "../common/validate.middleware.ts";
 
@@ -29,6 +28,7 @@ export class UserController extends BaseController implements IUserController {
         path: "/login",
         method: "post",
         func: this.login,
+        middlewares: [new ValidateMiddleware(UserLoginDto)],
       },
       {
         path: "/error",
@@ -38,8 +38,13 @@ export class UserController extends BaseController implements IUserController {
     ]);
   }
 
-  login(req: Request<{}, {}, UserLoginDto>, res: Response, next: NextFunction) {
-    console.log(req.body);
+  async login(
+    req: Request<{}, {}, UserLoginDto>,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    const result = await this.userService.validateUser(req.body);
+    if (!result) return next(new HTTPError(401, "Ошибка авторизации", "error"));
     this.ok(res, "login");
   }
 
@@ -47,7 +52,7 @@ export class UserController extends BaseController implements IUserController {
     req: Request<{}, {}, UserRegisterDto>,
     res: Response,
     next: NextFunction,
-  ) {
+  ): Promise<void> {
     const { body } = req;
     console.log(body);
     const result = await this.userService.createUser(body);
@@ -56,6 +61,6 @@ export class UserController extends BaseController implements IUserController {
   }
 
   error(req: Request, res: Response, next: NextFunction) {
-    next(new HTTPError(401, "Ошибка", "error"));
+    return next(new HTTPError(401, "Ошибка", "error"));
   }
 }
