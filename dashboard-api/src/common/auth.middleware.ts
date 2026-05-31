@@ -1,13 +1,17 @@
 import type { Request, Response, NextFunction } from "express";
-import { verify, type JwtPayload } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
+import type { JwtPayload } from "jsonwebtoken";
 import type { IMiddleware } from "./middleware.interface.ts";
 
 export class AuthMiddleware implements IMiddleware {
   constructor(private secret: string) {}
 
-  private async verifyJWT(jwt: string, secret: string): Promise<JwtPayload> {
+  private async verifyJWT(
+    jwtString: string,
+    secret: string,
+  ): Promise<JwtPayload> {
     return new Promise((resolve, reject) => {
-      verify(jwt, secret, (err, payload) => {
+      jwt.verify(jwtString, secret, (err, payload) => {
         if (err) {
           reject(err);
         }
