@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import type { NextFunction, Request, Response } from "express";
-import { sign } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import { BaseController } from "../common/base.controller.ts";
 import { HTTPError } from "../errors/http-error.class.ts";
 import { TYPES } from "../types.ts";
@@ -32,6 +32,11 @@ export class UserController extends BaseController implements IUserController {
         method: "post",
         func: this.login,
         middlewares: [new ValidateMiddleware(UserLoginDto)],
+      },
+      {
+        path: "/info",
+        method: "get",
+        func: this.info,
       },
       {
         path: "/error",
@@ -67,13 +72,20 @@ export class UserController extends BaseController implements IUserController {
     this.ok(res, result);
   }
 
+  async info(req: Request, res: Response, next: NextFunction): Promise<void> {
+    const { user } = req;
+    console.log(user);
+
+    this.ok(res, { email: user });
+  }
+
   error(req: Request, res: Response, next: NextFunction) {
     return next(new HTTPError(401, "Ошибка", "error"));
   }
 
   private signJWT(email: string, secret: string): Promise<string> {
     return new Promise<string>((resolve, reject) => {
-      sign(
+      jwt.sign(
         { email, iat: Math.floor(Date.now() / 1000) },
         secret,
         {
