@@ -7,6 +7,7 @@ import { TYPES } from "./types.ts";
 import type { ILogger } from "./logger/logger.interface.ts";
 import type { IConfigService } from "./config/config.service.interface.ts";
 import type { PrismaService } from "./database/prisma.service.ts";
+import { AuthMiddleware } from "./common/auth.middleware.ts";
 
 @injectable()
 export class App {
@@ -30,6 +31,8 @@ export class App {
 
   useMiddleware() {
     this.app.use(express.json());
+    const authMiddleware = new AuthMiddleware(this.configService.get("SECRET"));
+    this.app.use(authMiddleware.execute.bind(authMiddleware));
   }
 
   useRoutes() {
