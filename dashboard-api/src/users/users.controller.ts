@@ -1,5 +1,6 @@
 import { inject, injectable } from "inversify";
 import type { NextFunction, Request, Response } from "express";
+import { sign } from "jsonwebtoken";
 import { BaseController } from "../common/base.controller.ts";
 import { HTTPError } from "../errors/http-error.class.ts";
 import { TYPES } from "../types.ts";
@@ -9,12 +10,14 @@ import { UserLoginDto } from "./dto/user-login.dto.ts";
 import { UserRegisterDto } from "./dto/user-register.dto.ts";
 import type { IUserService } from "./users.service.interface.ts";
 import { ValidateMiddleware } from "../common/validate.middleware.ts";
+import type { IConfigService } from "../config/config.service.interface.ts";
 
 @injectable()
 export class UserController extends BaseController implements IUserController {
   constructor(
     @inject(TYPES.ILogger) private loggerService: ILogger,
     @inject(TYPES.UserService) private userService: IUserService,
+    @inject(TYPES.ConfigService) private configService: IConfigService,
   ) {
     super(loggerService);
     this.bindRoutes([
@@ -45,7 +48,11 @@ export class UserController extends BaseController implements IUserController {
   ): Promise<void> {
     const result = await this.userService.validateUser(req.body);
     if (!result) return next(new HTTPError(401, "Ошибка авторизации", "error"));
-    this.ok(res, "login");
+    const jwt = await this.signJWT(
+      req.body.email,
+      this.configService.get("SECRET"),
+    );
+    this.ok(res, { jwt });
   }
 
   async register(
@@ -62,5 +69,23 @@ export class UserController extends BaseController implements IUserController {
 
   error(req: Request, res: Response, next: NextFunction) {
     return next(new HTTPError(401, "Ошибка", "error"));
+  }
+
+  private signJWT(email: string, secret: string): Promise<string> {
+    return new Promise<string>((resolve, reject) => {
+      sign(
+        { email, iat: Math.floor(Date.now() / 1000) },
+        secret,
+        {
+          algorithm: "HS256",
+        },
+        (err, token) => {
+          if (err) {
+            reject(err);
+          }
+          resolve(token as string);
+        },
+      );
+    });
   }
 }
