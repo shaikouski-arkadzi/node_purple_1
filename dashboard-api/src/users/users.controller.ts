@@ -11,6 +11,7 @@ import { UserRegisterDto } from "./dto/user-register.dto.ts";
 import type { IUserService } from "./users.service.interface.ts";
 import { ValidateMiddleware } from "../common/validate.middleware.ts";
 import type { IConfigService } from "../config/config.service.interface.ts";
+import { AuthGuard } from "../common/auth.guard.ts";
 
 @injectable()
 export class UserController extends BaseController implements IUserController {
@@ -37,6 +38,7 @@ export class UserController extends BaseController implements IUserController {
         path: "/info",
         method: "get",
         func: this.info,
+        middlewares: [new AuthGuard()],
       },
       {
         path: "/error",
