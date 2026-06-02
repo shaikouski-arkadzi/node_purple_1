@@ -1,6 +1,7 @@
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 import { PrismaClient } from "@prisma/client";
 import { inject, injectable } from "inversify";
+import path from "node:path";
 import type { ILogger } from "../logger/logger.interface.ts";
 import { TYPES } from "../types.ts";
 
@@ -9,10 +10,10 @@ export class PrismaService {
   client: PrismaClient;
 
   constructor(@inject(TYPES.ILogger) private logger: ILogger) {
-    const adapter = new PrismaBetterSqlite3({ url: "../../dev.db" });
+    const adapter = new PrismaBetterSqlite3({ url: path.resolve("dev.db") });
     this.client = new PrismaClient({
       adapter: adapter,
-      log: [],
+      log: ["error", "warn"],
     });
   }
 
@@ -26,6 +27,7 @@ export class PrismaService {
           "[PrismaService] Ошибка подключения к БД: " + error.message,
         );
       }
+      throw error;
     }
   }
 
