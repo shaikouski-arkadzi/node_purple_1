@@ -36,3 +36,24 @@ beforeAll(() => {
   usersRepository = container.get<IUsersRepository>(TYPES.UsersRepository);
   usersService = container.get<IUserService>(TYPES.UserService);
 });
+
+describe("Users service", () => {
+  it("Create user", async () => {
+    configService.get = jest.fn().mockReturnValueOnce("1");
+    usersRepository.create = jest.fn().mockImplementationOnce(
+      (user: User): UserModel => ({
+        name: user.name,
+        email: user.email,
+        password: user.password,
+        id: 1,
+      }),
+    );
+    const createdUser = await usersService.createUser({
+      email: "a@email.com",
+      name: "Ark",
+      password: "123",
+    });
+    expect(createdUser?.id).toEqual(1);
+    expect(createdUser?.password).not.toEqual(1);
+  });
+});
