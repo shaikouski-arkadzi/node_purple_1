@@ -28,12 +28,12 @@ export const appBinding = new ContainerModule(({ bind }) => {
   bind<App>(TYPES.Application).to(App);
 });
 
-function main() {
+async function main() {
   const appContainer = new Container();
   appContainer.load(appBinding);
   const app = appContainer.get<App>(TYPES.Application);
-  app.init();
+  await app.init();
   return { appContainer, app };
 }
 
-export const { app, appContainer } = main();
+export const mainData = main();

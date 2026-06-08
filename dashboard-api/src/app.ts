@@ -51,4 +51,8 @@ export class App {
     this.server = this.app.listen(this.port);
     this.logger.log(`Сервер запущен на http://localhost:${this.port}`);
   }
+
+  close() {
+    this.server.close();
+  }
 }
